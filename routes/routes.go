@@ -35,7 +35,9 @@ func Init() *echo.Echo {
 
 	e.PATCH("/customer", controllers.UpdateCustomer)
 
-	e.DELETE("/customer/:c_id", controllers.DeleteCustomer)
+	// e.DELETE("/customer/:c_id", controllers.DeleteCustomer)
+
+	e.PUT("/customer/:c_id", controllers.DeleteCustomer)
 
 	e.GET("/technician-all", controllers.FetchAllTechnician)
 
@@ -53,7 +55,9 @@ func Init() *echo.Echo {
 
 	e.PATCH("/technician-rate/:t_id/:rate", controllers.UpdateTechnicianRate)
 
-	e.DELETE("/technician/:t_id", controllers.DeleteTechnician)
+	e.PUT("/technician/:t_id", controllers.DeleteTechnician)
+
+	// e.DELETE("/technician/:t_id", controllers.DeleteTechnician)
 
 	e.GET("/order", controllers.FetchAllOrder)
 
@@ -72,6 +76,10 @@ func Init() *echo.Echo {
 	e.GET("/technician-by-id/:t_id", controllers.GetTechnicianByID)
 
 	e.GET("/customer-by-id/:c_id", controllers.GetCustomerByID)
+
+	e.GET("/kecamatan", controllers.FetchAllKecamatan)
+
+	e.GET("/wilayah", controllers.FetchAllWiayah)
 
 	return e
 }
