@@ -2,6 +2,7 @@ package models
 
 import (
 	// "encoding/json"
+
 	"fmt"
 	"net/http"
 	"strconv"
@@ -19,7 +20,9 @@ type Technician struct {
 	Password     string `json:"password" validate:"required"`
 	Rate         int    `json:"rate" validate:"required"`
 	Kecamatan_id int    `json:"kecamatan_id" validate:"required"`
-	Status       string `json:"status" validate:"required"`
+	// Kecamatan    Kecamatan
+	// Kecamatan_id *Kecamatan `json:"kecamatan_id" validate:"required"`
+	Status string `json:"status" validate:"required"`
 }
 
 // read all
@@ -30,7 +33,8 @@ func FetchAllTechnician() (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatement := "SELECT * FROM technician t WHERE t.status='active'"
+	// sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.status = 'active'"
+	sqlStatement := "SELECT * FROM technician t WHERE t.status = 'active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -55,6 +59,40 @@ func FetchAllTechnician() (Response, error) {
 	res.Data = arrObj
 
 	return res, nil
+
+	//chat open ai. malah datanya null
+	// var technicians []Technician
+	// var res Response
+
+	// con := db.CreateCon()
+
+	// sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.status = 'active'"
+
+	// rows, err := con.Query(sqlStatement)
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return res, err
+	// }
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	var t Technician
+	// 	var k Kecamatan
+	// 	err := rows.Scan(&t.T_id, &t.T_name, &t.Username, &t.Phone, &t.Email, &t.Password, &t.Rate, &t.Kecamatan_id, &k.K_id, &k.Kecamatan_name, &k.Wilayah_id, &t.Status)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 		continue
+	// 	}
+	// 	t.Kecamatan_id = &k
+	// 	technicians = append(technicians, t)
+	// }
+
+	// res.Status = http.StatusOK
+	// res.Message = "Success"
+	// res.Data = technicians
+
+	// return res, nil
+
 }
 
 func GetTechnicianByName(t_name string) (Response, error) {
