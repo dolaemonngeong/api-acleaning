@@ -59,7 +59,7 @@ func GetCustomerByUsername(username string) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
-	sqlStatement := "SELECT * FROM customer WHERE customer.username LIKE ?"
+	sqlStatement := "SELECT * FROM customer WHERE customer.username LIKE '%" + username + "%'"
 	rows, err := con.Query(sqlStatement)
 
 	defer rows.Close()

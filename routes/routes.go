@@ -29,7 +29,7 @@ func Init() *echo.Echo {
 
 	e.GET("/customer", controllers.FetchAllCustomer)
 
-	// e.GET("/customer/:username", controllers.GetCustomerByUsername)
+	e.GET("/customer-usernm/:username", controllers.GetCustomerByUsername)
 
 	e.POST("/customer", controllers.StoreCustomer)
 

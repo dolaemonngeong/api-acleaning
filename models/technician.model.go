@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
 	// "vp_alp/controllers"
 	"vp_alp/db"
 )
@@ -29,7 +30,7 @@ func FetchAllTechnician() (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatement := "SELECT * FROM technician"
+	sqlStatement := "SELECT * FROM technician t WHERE t.status='active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -66,7 +67,7 @@ func GetTechnicianByName(t_name string) (Response, error) {
 
 	con := db.CreateCon()
 	fmt.Println(t_name)
-	sqlStatement := "SELECT * FROM technician WHERE t_name LIKE '%" + t_name + "%'"
+	sqlStatement := "SELECT * FROM technician WHERE t_name LIKE '%" + t_name + "%' AND status='active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -93,17 +94,17 @@ func GetTechnicianByName(t_name string) (Response, error) {
 	return res, nil
 }
 
-func GetTechnicianByLocation(kid string) (Response, error) {
+func GetTechnicianByLocation(k_id int) (Response, error) {
 
 	var obj Technician
-	var obj2 Kecamatan
+	// var obj2 Kecamatan
 	var arrObj []Technician
 	var res Response
 
 	con := db.CreateCon()
-	// kid := strconv.Itoa(k_id)
-	fmt.Println(kid)
-	sqlStatement := "SELECT * FROM technician t, kecamatan k WHERE kecamatan_name = '" + kid + "' AND t.kecamatan_id = k.kecamatan_id "
+	kid := strconv.Itoa(k_id)
+
+	sqlStatement := "SELECT * FROM technician t WHERE t.kecamatan_id = '" + kid + "' AND t.status = 'active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -114,7 +115,7 @@ func GetTechnicianByLocation(kid string) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj2.K_id, &obj2.Kecamatan_name, &obj2.Wilayah_id)
+		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status)
 
 		if err != nil {
 			return res, err
@@ -139,7 +140,7 @@ func GetTechnicianByID(t_id int) (Response, error) {
 	con := db.CreateCon()
 	fmt.Println(t_id)
 	tid := strconv.Itoa(t_id)
-	sqlStatement := "SELECT * FROM technician WHERE t_id = " + tid + ""
+	sqlStatement := "SELECT * FROM technician t WHERE t.t_id = '" + tid + "' AND t.status = 'active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -150,7 +151,7 @@ func GetTechnicianByID(t_id int) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id)
+		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status)
 
 		if err != nil {
 			return res, err

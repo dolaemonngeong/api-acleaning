@@ -38,7 +38,7 @@ func CheckLoginTechnician(username, password string) (bool, error) {
 	if !match {
 		fmt.Print("Hash and password doesn't match!")
 		return false, err
-	}
+	}	
 
 	return true, nil
 }

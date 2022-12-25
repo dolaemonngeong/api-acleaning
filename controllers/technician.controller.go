@@ -38,9 +38,9 @@ func GetTechnicianByName(c echo.Context) error {
 
 func GetTechnicianByLocation(c echo.Context) error {
 	k_id := c.Param("k_id")
-	// kid, err := strconv.Atoi(k_id)
+	kid, err := strconv.Atoi(k_id)
 	fmt.Println(k_id)
-	result, err := models.GetTechnicianByLocation(k_id)
+	result, err := models.GetTechnicianByLocation(kid)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError,
