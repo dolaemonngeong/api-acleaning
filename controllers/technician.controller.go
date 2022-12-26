@@ -183,6 +183,7 @@ func UpdateTechnician(c echo.Context) error {
 		res.Data = errordata
 		return c.JSON(http.StatusBadRequest, res)
 	} else {
+		password, _ := helpers.HashPassword(password)
 		result, _ := models.UpdateTechnician(id, name, username, phone, email, password, kid)
 		return c.JSON(http.StatusOK, result)
 	}

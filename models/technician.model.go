@@ -12,86 +12,87 @@ import (
 )
 
 type Technician struct {
-	T_id         int    `json:"t_id" validate:"required"`
-	T_name       string `json:"t_name" validate:"required"`
-	Username     string `json:"username" validate:"required"`
-	Phone        string `json:"phone" validate:"required"`
-	Email        string `json:"email" validate:"required,email"`
-	Password     string `json:"password" validate:"required"`
-	Rate         int    `json:"rate" validate:"required"`
-	Kecamatan_id int    `json:"kecamatan_id" validate:"required"`
-	// Kecamatan    Kecamatan
-	// Kecamatan_id *Kecamatan `json:"kecamatan_id" validate:"required"`
-	Status string `json:"status" validate:"required"`
+	T_id     int    `json:"t_id" validate:"required"`
+	T_name   string `json:"t_name" validate:"required"`
+	Username string `json:"username" validate:"required"`
+	Phone    string `json:"phone" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+	Rate     int    `json:"rate" validate:"required"`
+	// Kecamatan_id int    `json:"kecamatan_id" validate:"required"`
+	Kecamatan    Kecamatan
+	Kecamatan_id uint   `json:"kecamatan_id" validate:"required"`
+	Status       string `json:"status" validate:"required"`
 }
 
 // read all
 func FetchAllTechnician() (Response, error) {
-	var obj Technician
-	var arrObj []Technician
-	var res Response
-
-	con := db.CreateCon()
-
-	// sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.status = 'active'"
-	sqlStatement := "SELECT * FROM technician t WHERE t.status = 'active'"
-
-	rows, err := con.Query(sqlStatement)
-
-	defer rows.Close()
-
-	if err != nil {
-		return res, err
-	}
-
-	for rows.Next() {
-		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status)
-
-		if err != nil {
-			return res, err
-		}
-
-		arrObj = append(arrObj, obj)
-	}
-
-	res.Status = http.StatusOK
-	res.Message = "Success"
-	res.Data = arrObj
-
-	return res, nil
-
-	//chat open ai. malah datanya null
-	// var technicians []Technician
+	// var obj Technician
+	// var arrObj []Technician
 	// var res Response
 
 	// con := db.CreateCon()
 
-	// sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.status = 'active'"
+	// // sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.status = 'active'"
+	// sqlStatement := "SELECT * FROM technician t WHERE t.status = 'active'"
 
 	// rows, err := con.Query(sqlStatement)
 
+	// defer rows.Close()
+
 	// if err != nil {
-	// 	fmt.Println(err)
 	// 	return res, err
 	// }
-	// defer rows.Close()
+
 	// for rows.Next() {
-	// 	var t Technician
-	// 	var k Kecamatan
-	// 	err := rows.Scan(&t.T_id, &t.T_name, &t.Username, &t.Phone, &t.Email, &t.Password, &t.Rate, &t.Kecamatan_id, &k.K_id, &k.Kecamatan_name, &k.Wilayah_id, &t.Status)
+	// 	err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status)
+
 	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		continue
+	// 		return res, err
 	// 	}
-	// 	t.Kecamatan_id = &k
-	// 	technicians = append(technicians, t)
+
+	// 	arrObj = append(arrObj, obj)
 	// }
 
 	// res.Status = http.StatusOK
 	// res.Message = "Success"
-	// res.Data = technicians
+	// res.Data = arrObj
 
 	// return res, nil
+
+	//chat open ai. malah datanya null
+	var technicians []Technician
+	var res Response
+
+	con := db.CreateCon()
+
+	sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.status = 'active'"
+
+	rows, err := con.Query(sqlStatement)
+
+	if err != nil {
+		fmt.Println(err)
+		return res, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var t Technician
+		// var k Kecamatan
+		// k.K_id = t.Kecamatan_id
+
+		err := rows.Scan(&t.T_id, &t.T_name, &t.Username, &t.Phone, &t.Email, &t.Password, &t.Rate, &t.Kecamatan_id, &t.Status, &t.Kecamatan.K_id, &t.Kecamatan.Kecamatan_name, &t.Kecamatan.Wilayah_id)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		technicians = append(technicians, t)
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "Success"
+	res.Data = technicians
+
+	return res, nil
 
 }
 
@@ -105,7 +106,7 @@ func GetTechnicianByName(t_name string) (Response, error) {
 
 	con := db.CreateCon()
 	fmt.Println(t_name)
-	sqlStatement := "SELECT * FROM technician WHERE t_name LIKE '%" + t_name + "%' AND status='active'"
+	sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t_name LIKE '%" + t_name + "%' AND status='active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -116,7 +117,7 @@ func GetTechnicianByName(t_name string) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status)
+		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status, &obj.Kecamatan.K_id, &obj.Kecamatan.Kecamatan_name, &obj.Kecamatan.Wilayah_id)
 
 		if err != nil {
 			return res, err
@@ -142,7 +143,7 @@ func GetTechnicianByLocation(k_id int) (Response, error) {
 	con := db.CreateCon()
 	kid := strconv.Itoa(k_id)
 
-	sqlStatement := "SELECT * FROM technician t WHERE t.kecamatan_id = '" + kid + "' AND t.status = 'active'"
+	sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.kecamatan_id = '" + kid + "' AND t.status = 'active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -153,7 +154,7 @@ func GetTechnicianByLocation(k_id int) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status)
+		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status, &obj.Kecamatan.K_id, &obj.Kecamatan.Kecamatan_name, &obj.Kecamatan.Wilayah_id)
 
 		if err != nil {
 			return res, err
@@ -189,7 +190,7 @@ func GetTechnicianByID(t_id int) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status)
+		err = rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status, &obj.Kecamatan.K_id, &obj.Kecamatan.Kecamatan_name, &obj.Kecamatan.Wilayah_id)
 
 		if err != nil {
 			return res, err
