@@ -61,7 +61,11 @@ func GetTechnicianByID(c echo.Context) error {
 			map[string]string{"message": err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, result)
+	// var p map[string]interface{}
+	// p = json.Unmarshal(result.Data, &p)
+	return c.JSON(http.StatusOK, result.Data)
+	// return c.JSON(http.StatusOK, p)
+	// return result, nil
 }
 
 func StoreTechnician(c echo.Context) error {

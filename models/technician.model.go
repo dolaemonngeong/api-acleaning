@@ -179,7 +179,7 @@ func GetTechnicianByID(t_id int) (Response, error) {
 	con := db.CreateCon()
 	fmt.Println(t_id)
 	tid := strconv.Itoa(t_id)
-	sqlStatement := "SELECT * FROM technician t WHERE t.t_id = '" + tid + "' AND t.status = 'active'"
+	sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.t_id = '" + tid + "' AND t.status = 'active'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -197,10 +197,11 @@ func GetTechnicianByID(t_id int) (Response, error) {
 		}
 
 		arrObj = append(arrObj, obj)
+		// return &obj
 	}
 
-	res.Status = http.StatusOK
-	res.Message = "Success"
+	// res.Status = http.StatusOK
+	// res.Message = "Success"
 	res.Data = arrObj
 
 	return res, nil
