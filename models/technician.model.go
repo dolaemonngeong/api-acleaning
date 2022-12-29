@@ -200,8 +200,8 @@ func GetTechnicianByID(t_id int) (Response, error) {
 		// return &obj
 	}
 
-	// res.Status = http.StatusOK
-	// res.Message = "Success"
+	res.Status = http.StatusOK
+	res.Message = "Success"
 	res.Data = arrObj
 
 	return res, nil

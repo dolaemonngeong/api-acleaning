@@ -63,8 +63,8 @@ func GetTechnicianByID(c echo.Context) error {
 
 	// var p map[string]interface{}
 	// p = json.Unmarshal(result.Data, &p)
-	return c.JSON(http.StatusOK, result.Data)
-	// return c.JSON(http.StatusOK, p)
+	return c.JSON(http.StatusOK, result)
+	// return c.JSON(http.StatusOK, result.Data)
 	// return result, nil
 }
 

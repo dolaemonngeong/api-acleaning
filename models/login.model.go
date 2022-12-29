@@ -19,10 +19,9 @@ func CheckLoginTechnician(username, password string) (bool, error) {
 	var pwd string
 	con := db.CreateCon()
 
-	sqlStatement := "SELECT * FROM technician WHERE username = ?"
+	sqlStatement := "SELECT * FROM technician WHERE username = ? AND status='active'"
 	err := con.QueryRow(sqlStatement, username).Scan(
-		&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &pwd, &obj.Rate, &obj.Kecamatan_id, &obj.Status,
-	)
+		&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &pwd, &obj.Rate, &obj.Kecamatan_id, &obj.Status, &obj.Kecamatan.K_id, &obj.Kecamatan.Kecamatan_name, &obj.Kecamatan.Wilayah_id)
 
 	if err == sql.ErrNoRows {
 		fmt.Print("Username not found!") //don't show in production env
@@ -48,7 +47,7 @@ func CheckLoginCustomer(username, password string) (bool, error) {
 	var pwd string
 	con := db.CreateCon()
 
-	sqlStatement := "SELECT * FROM customer WHERE username = ?"
+	sqlStatement := "SELECT * FROM customer WHERE username = ? AND status='active'"
 	err := con.QueryRow(sqlStatement, username).Scan(
 		&obj.C_id, &obj.Name, &obj.Username, &obj.Phone, &obj.Email, &pwd, &obj.Status,
 	)
