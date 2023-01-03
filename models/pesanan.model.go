@@ -9,16 +9,17 @@ import (
 )
 
 type Pesanan struct {
-	O_id    int            `json:"0_id" validate:"required"`
-	Name    string         `json:"name" validate:"required"`
-	Address string         `json:"address" validate:"required"`
-	Phone   string         `json:"phone" validate:"required"`
-	Time    string         `json:"time" validate:"required"`
-	Date    string         `json:"date" validate:"required"`
-	Note    sql.NullString `json:"note"`
-	T_id    int            `json:"t_id" validate:"required"`
-	C_id    int            `json:"c_id" validate:"required"`
-	Status  string         `json:"status" validate:"required"`
+	O_id       int            `json:"0_id" validate:"required"`
+	Name       string         `json:"name" validate:"required"`
+	Address    string         `json:"address" validate:"required"`
+	Phone      string         `json:"phone" validate:"required"`
+	Time       string         `json:"time" validate:"required"`
+	Date       string         `json:"date" validate:"required"`
+	Note       sql.NullString `json:"note"`
+	Technician Technician
+	T_id       uint   `json:"t_id" validate:"required"`
+	C_id       int    `json:"c_id" validate:"required"`
+	Status     string `json:"status" validate:"required"`
 }
 
 // read all
@@ -134,7 +135,7 @@ func GetTechnicianOrder(t_id string, status string) (Response, error) {
 	con := db.CreateCon()
 	fmt.Println(status)
 	fmt.Println(t_id)
-	sqlStatement := "SELECT * FROM pesanan WHERE status = '" + status + "' AND t_id = '" + t_id + "'"
+	sqlStatement := "SELECT * FROM pesanan p INNER JOIN technician t ON t.t_id = p.t_id WHERE p.status = '" + status + "' AND p.t_id = '" + t_id + "'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -145,7 +146,7 @@ func GetTechnicianOrder(t_id string, status string) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj2.O_id, &obj2.Name, &obj2.Address, &obj2.Phone, &obj2.Time, &obj2.Date, &obj2.Note, &obj2.T_id, &obj2.C_id, &obj2.Status)
+		err = rows.Scan(&obj2.O_id, &obj2.Name, &obj2.Address, &obj2.Phone, &obj2.Time, &obj2.Date, &obj2.Note, &obj2.T_id, &obj2.C_id, &obj2.Status, &obj2.Technician.T_id, &obj2.Technician.T_name, &obj2.Technician.Username, &obj2.Technician.Phone, &obj2.Technician.Email, &obj2.Technician.Password, &obj2.Technician.Rate, &obj2.Technician.Kecamatan_id, &obj2.Technician.Status)
 
 		if err != nil {
 			return res, err
@@ -171,7 +172,7 @@ func GetCustomerOrder(c_id string, status string) (Response, error) {
 	con := db.CreateCon()
 	fmt.Println(status)
 	fmt.Println(c_id)
-	sqlStatement := "SELECT * FROM pesanan WHERE status = '" + status + "' AND c_id = '" + c_id + "'"
+	sqlStatement := "SELECT * FROM pesanan p INNER JOIN technician t ON t.t_id = p.t_id WHERE p.status = '" + status + "' AND p.c_id = '" + c_id + "'"
 
 	rows, err := con.Query(sqlStatement)
 
@@ -182,7 +183,7 @@ func GetCustomerOrder(c_id string, status string) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj2.O_id, &obj2.Name, &obj2.Address, &obj2.Phone, &obj2.Time, &obj2.Date, &obj2.Note, &obj2.T_id, &obj2.C_id, &obj2.Status)
+		err = rows.Scan(&obj2.O_id, &obj2.Name, &obj2.Address, &obj2.Phone, &obj2.Time, &obj2.Date, &obj2.Note, &obj2.T_id, &obj2.C_id, &obj2.Status, &obj2.Technician.T_id, &obj2.Technician.T_name, &obj2.Technician.Username, &obj2.Technician.Phone, &obj2.Technician.Email, &obj2.Technician.Password, &obj2.Technician.Rate, &obj2.Technician.Kecamatan_id, &obj2.Technician.Status)
 
 		if err != nil {
 			return res, err

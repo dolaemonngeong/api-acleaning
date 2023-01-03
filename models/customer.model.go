@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
 	// "vp_alp/controllers"
 	"vp_alp/db"
 )
@@ -85,7 +86,27 @@ func GetCustomerByUsername(username string) (Response, error) {
 	return res, nil
 }
 
-func GetCustomerByID(c_id int) (Response, error) {
+func GetCustomerByID(c_id int) (Customer, error) {
+
+	var obj Customer
+
+	con := db.CreateCon()
+	fmt.Println(c_id)
+	cid := strconv.Itoa(c_id)
+	sqlStatement := "SELECT * FROM customer WHERE c_id = ?"
+
+	rows := con.QueryRow(sqlStatement, cid)
+
+	err := rows.Scan(&obj.C_id, &obj.Name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Status)
+
+	if err != nil {
+		return obj, err
+	}
+
+	return obj, nil
+}
+
+func GetCustomerByID1(c_id int) (Response, error) {
 
 	var obj Customer
 	var arrObj []Customer
@@ -161,7 +182,7 @@ func UpdateCustomer(c_id int, name string, username string, phone string, email 
 	var res Response
 
 	// p = controllers.GenerateHashPassword
-	// password = p 
+	// password = p
 	con := db.CreateCon()
 	sqlStatement := "UPDATE customer SET name=?, username=?, phone=?, email=?, password=? WHERE customer.c_id=?"
 	stmt, err := con.Prepare(sqlStatement)

@@ -60,7 +60,6 @@ func FetchAllTechnician() (Response, error) {
 
 	// return res, nil
 
-	//chat open ai. malah datanya null
 	var technicians []Technician
 	var res Response
 
@@ -170,7 +169,27 @@ func GetTechnicianByLocation(k_id int) (Response, error) {
 	return res, nil
 }
 
-func GetTechnicianByID(t_id int) (Response, error) {
+func GetTechnicianByID(t_id int) (Technician, error) {
+
+	var obj Technician
+
+	con := db.CreateCon()
+	fmt.Println(t_id)
+	tid := strconv.Itoa(t_id)
+	sqlStatement := "SELECT * FROM technician t INNER JOIN kecamatan k ON t.kecamatan_id = k.kecamatan_id WHERE t.t_id = ? AND t.status = 'active'"
+
+	rows := con.QueryRow(sqlStatement, tid)
+
+	err := rows.Scan(&obj.T_id, &obj.T_name, &obj.Username, &obj.Phone, &obj.Email, &obj.Password, &obj.Rate, &obj.Kecamatan_id, &obj.Status, &obj.Kecamatan.K_id, &obj.Kecamatan.Kecamatan_name, &obj.Kecamatan.Wilayah_id)
+
+	if err != nil {
+		return obj, err
+	}
+
+	return obj, nil
+}
+
+func GetTechnicianByID1(t_id int) (Response, error) {
 
 	var obj Technician
 	var arrObj []Technician
