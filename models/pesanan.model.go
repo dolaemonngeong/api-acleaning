@@ -236,38 +236,22 @@ func GetCustomerOrder(c_id string, status string) (Response, error) {
 // 	return res, nil
 // }
 
-func GetOrderByID(o_id int) (Response, error) {
+func GetOrderByID(o_id int) (Pesanan, error) {
 
 	var obj Pesanan
-	var arrObj []Pesanan
-	var res Response
 
 	con := db.CreateCon()
 	fmt.Println(o_id)
 	oid := strconv.Itoa(o_id)
-	sqlStatement := "SELECT * FROM pesanan WHERE o_id = " + oid + ""
+	sqlStatement := "SELECT * FROM pesanan WHERE o_id = ?"
 
-	rows, err := con.Query(sqlStatement)
+	rows := con.QueryRow(sqlStatement, oid)
 
-	defer rows.Close()
+	err := rows.Scan(&obj.O_id, &obj.Name, &obj.Address, &obj.Phone, &obj.Time, &obj.Date, &obj.Note, &obj.T_id, &obj.C_id, &obj.Status)
 
 	if err != nil {
-		return res, err
+		return obj, err
 	}
 
-	for rows.Next() {
-		err = rows.Scan(&obj.O_id, &obj.Name, &obj.Address, &obj.Phone, &obj.Time, &obj.Date, &obj.Note, &obj.T_id, &obj.C_id, &obj.Status)
-
-		if err != nil {
-			return res, err
-		}
-
-		arrObj = append(arrObj, obj)
-	}
-
-	res.Status = http.StatusOK
-	res.Message = "Success"
-	res.Data = arrObj
-
-	return res, nil
+	return obj, nil
 }

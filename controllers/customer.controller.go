@@ -67,7 +67,6 @@ func StoreCustomer(c echo.Context) error {
 	// return c.JSON(http.StatusOK, result)
 
 	var res models.Response
-	
 
 	v := validator.New()
 	var errordata = make(map[string]string)
@@ -104,7 +103,7 @@ func StoreCustomer(c echo.Context) error {
 		res.Data = errordata
 		return c.JSON(http.StatusBadRequest, res)
 	} else {
-		password,_ := helpers.HashPassword(password)
+		password, _ := helpers.HashPassword(password)
 		result, _ := models.StoreCustomer(name, username, phone, email, password)
 		return c.JSON(http.StatusOK, result)
 	}
@@ -161,7 +160,7 @@ func UpdateCustomer(c echo.Context) error {
 		res.Data = errordata
 		return c.JSON(http.StatusBadRequest, res)
 	} else {
-		password,_ := helpers.HashPassword(password)
+		password, _ := helpers.HashPassword(password)
 		result, _ := models.UpdateCustomer(id, name, username, phone, email, password)
 		return c.JSON(http.StatusOK, result)
 	}
