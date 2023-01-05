@@ -9,7 +9,7 @@ import (
 )
 
 type Pesanan struct {
-	O_id       int            `json:"0_id" validate:"required"`
+	O_id       int            `json:"o_id" validate:"required"`
 	Name       string         `json:"name" validate:"required"`
 	Address    string         `json:"address" validate:"required"`
 	Phone      string         `json:"phone" validate:"required"`
