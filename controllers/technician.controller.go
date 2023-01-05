@@ -193,14 +193,15 @@ func UpdateTechnician(c echo.Context) error {
 	}
 }
 func UpdateTechnicianRate(c echo.Context) error {
-	rate := c.Param("rate")
-	r, err := strconv.Atoi(rate)
-	t_id := c.Param("t_id")
+	fmt.Print("update contr")
+	t_id := c.FormValue("t_id")
 	tid, err := strconv.Atoi(t_id)
-
+	rate := c.FormValue("rate")
+	r, err := strconv.Atoi(rate)
 	// result, err := models.UpdateTechnicianRate(r, tid)
 
 	if err != nil {
+		fmt.Println("update contr eror")
 		return c.JSON(http.StatusInternalServerError,
 			map[string]string{"message": err.Error()})
 	}
@@ -212,19 +213,23 @@ func UpdateTechnicianRate(c echo.Context) error {
 	err1 := v.Var(rate, "required")
 	if err1 != nil {
 		errordata["rate"] = "rate is require."
+		fmt.Println("rate krg")
 	}
 
 	err2 := v.Var(tid, "required")
 	if err2 != nil {
 		errordata["tid"] = "t_id is require."
+		fmt.Println("t_id krg")
 	}
 
 	if len(errordata) != 0 {
+		fmt.Print("eror updaterate")
 		res.Status = http.StatusBadRequest
 		res.Message = "Error"
 		res.Data = errordata
 		return c.JSON(http.StatusBadRequest, res)
 	} else {
+		fmt.Println("berhsl updaterate")
 		result, _ := models.UpdateTechnicianRate(r, tid)
 		return c.JSON(http.StatusOK, result)
 	}

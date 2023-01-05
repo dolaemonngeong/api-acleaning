@@ -123,10 +123,10 @@ func UpdateOrder(c echo.Context) error {
 	v := validator.New()
 	var errordata = make(map[string]string)
 
-	err1 := v.Var(oid, "required")
-	if err1 != nil {
-		errordata["oid"] = "o_id is require."
-	}
+	// err1 := v.Var(oid, "required")
+	// if err1 != nil {
+	// 	errordata["oid"] = "o_id is require."
+	// }
 
 	err2 := v.Var(status, "required")
 	if err2 != nil {

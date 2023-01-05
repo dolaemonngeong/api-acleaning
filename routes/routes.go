@@ -53,7 +53,7 @@ func Init() *echo.Echo {
 
 	e.PATCH("/technician", controllers.UpdateTechnician)
 
-	e.PATCH("/technician-rate/:t_id/:rate", controllers.UpdateTechnicianRate)
+	e.PATCH("/technician-rate", controllers.UpdateTechnicianRate)
 
 	e.PUT("/technician/:t_id", controllers.DeleteTechnician)
 
